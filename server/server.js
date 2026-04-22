@@ -52,7 +52,7 @@ app.use('*', (req, res) => {
 // MongoDB Connection
 const PORT = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/foodify')
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ MongoDB Connected');
     app.listen(PORT, () => {
