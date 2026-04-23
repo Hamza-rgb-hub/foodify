@@ -29,8 +29,8 @@ export const getImageUrl = (url) => {
   const FALLBACK = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80';
   if (!url || typeof url !== 'string') return FALLBACK;
   if (/^https?:\/\//.test(url)) return url;
-  if (url.startsWith('/')) return `http://localhost:5000${url}`;
-  return `http://localhost:5000/uploads/${url}`;
+  if (url.startsWith('/')) return `https://foodify-0iiq.onrender.com${url}`;
+  return `https://foodify-0iiq.onrender.com/uploads/${url}`;
 };
 
 export const getOrderStatusColor = (status) => {
