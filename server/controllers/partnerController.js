@@ -279,14 +279,10 @@ exports.createPartner = async (req, res) => {
 
     const partnerData = { ...req.body, user: req.user.id };
 
-    if (req.files) {
-      if (req.files.logo) {
-        partnerData.logo = `/uploads/${req.files.logo[0].filename}`;
-      }
-      if (req.files.coverImage) {
-        partnerData.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
-      }
-    }
+    foodData.images = req.files.map(file => ({
+      url: file.path,          // Cloudinary secure URL
+      public_id: file.filename // Cloudinary public_id
+    }));
 
     // Ensure user role is partner
     await User.findByIdAndUpdate(req.user.id, { role: 'partner' });
@@ -308,14 +304,10 @@ exports.updatePartner = async (req, res) => {
     }
 
     const updateData = { ...req.body };
-    if (req.files) {
-      if (req.files.logo) {
-        updateData.logo = `/uploads/${req.files.logo[0].filename}`;
-      }
-      if (req.files.coverImage) {
-        updateData.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
-      }
-    }
+    foodData.images = req.files.map(file => ({
+      url: file.path,          // Cloudinary secure URL
+      public_id: file.filename // Cloudinary public_id
+    }));
 
     partner = await Partner.findByIdAndUpdate(partner._id, updateData, {
       new: true,
@@ -349,7 +341,7 @@ exports.getDashboard = async (req, res) => {
       Order.countDocuments({ partner: partner._id, orderStatus: { $in: ['placed', 'confirmed', 'preparing'] } }),
       Order.countDocuments({
         partner: partner._id,
-        createdAt: { $gte: new Date(new Date().setHours(0,0,0,0)) }
+        createdAt: { $gte: new Date(new Date().setHours(0, 0, 0, 0)) }
       }),
       Food.countDocuments({ partner: partner._id }),
       Order.find({ partner: partner._id })
