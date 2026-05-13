@@ -9,14 +9,13 @@ router.get('/', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate({
       path: 'cart.food',
-      populate: { path: 'partner', select: 'shopName slug deliveryFee deliveryTime isOpen' }
+      populate: { path: 'partner', select: 'shopName slug deliveryFee deliveryTime isOpen logo coverImage' }
     });
     res.json({ success: true, data: user.cart });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 });
-
 // Add to cart
 router.post('/add', protect, async (req, res) => {
   try {
