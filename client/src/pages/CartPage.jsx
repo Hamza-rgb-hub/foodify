@@ -76,9 +76,9 @@ export default function CartPage() {
                   className="card p-4 flex gap-4"
                 >
                   <Link to={`/food/${food?._id}`} className="flex-shrink-0">
-                    <img src={getImageUrl(food?.images?.[0]?.public_id)} alt={food?.name}
+                    <img src={getImageUrl(food?.images?.[0]?.url)} alt={food?.name}
                       className="w-20 h-20 rounded-2xl object-cover"
-                      onError={e => { e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80'; }} />
+                    />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
