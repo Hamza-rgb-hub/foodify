@@ -121,6 +121,9 @@ export default function CartPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card p-6 sticky top-24">
             <h2 className="font-bold text-lg text-gray-900 dark:text-white mb-5">Order Summary</h2>
             {partner && (
+              
+              <>
+               {console.log('partner logo:', partner.logo)}
               <div className="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-2xl mb-5">
                 <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0">
                   <img src={getImageUrl(partner.logo)} alt={partner.shopName}
@@ -132,6 +135,7 @@ export default function CartPage() {
                   <p className="font-semibold text-sm text-gray-900 dark:text-white">{partner.shopName}</p>
                 </div>
               </div>
+              </>
             )}
             <div className="space-y-3 text-sm mb-5">
               {[

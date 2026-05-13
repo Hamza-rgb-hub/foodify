@@ -117,7 +117,7 @@ export default function AdminPartners() {
               <div className="flex items-start gap-3 mb-4">
                 <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-orange-50 dark:bg-orange-900/20">
                   {partner.logo
-                    ? <img src={getImageUrl(partner.logo)} alt="" className="w-full h-full object-cover"
+                    ? <img src={getImageUrl(partner.logo)} alt={partner.shopName} className="w-full h-full object-cover"
                         onError={e => { e.target.parentElement.innerHTML = '<div class="w-full h-full flex items-center justify-center text-2xl">🏪</div>'; }} />
                     : <div className="w-full h-full flex items-center justify-center text-2xl">🏪</div>
                   }
