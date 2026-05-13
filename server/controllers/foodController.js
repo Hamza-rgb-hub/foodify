@@ -223,6 +223,22 @@ const Food = require('../models/Food');
 const Partner = require('../models/Partner');
 const Category = require('../models/Category');
 
+const { cloudinary } = require('../config/cloudinary');
+
+const uploadToCloudinary = (buffer, folder) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder, transformation: [{ width: 1000, quality: 'auto' }] },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    stream.end(buffer);
+  });
+};
+
+
 // @desc    Get all food items with filters
 // @route   GET /api/food
 exports.getAllFood = async (req, res) => {
@@ -309,6 +325,66 @@ exports.getFoodById = async (req, res) => {
 
 // @desc    Create food item (Partner only)
 // @route   POST /api/food
+// exports.createFood = async (req, res) => {
+//   try {
+//     const partner = await Partner.findOne({ user: req.user.id });
+//     if (!partner) {
+//       return res.status(404).json({ success: false, message: 'Partner profile not found' });
+//     }
+//     if (!partner.isApproved) {
+//       return res.status(403).json({ success: false, message: 'Your shop is pending approval' });
+//     }
+
+//     const foodData = { ...req.body, partner: partner._id };
+
+//     // Handle uploaded images — always use /uploads/filename (never file.path which is an absolute OS path)
+//     foodData.images = req.files.map(file => ({
+//       url: file.path,          // Cloudinary secure URL
+//       public_id: file.filename // Cloudinary public_id
+//     }));
+
+//     const food = await Food.create(foodData);
+//     await food.populate('category', 'name slug');
+
+//     res.status(201).json({ success: true, data: food });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+// // @desc    Update food item
+// // @route   PUT /api/food/:id
+// exports.updateFood = async (req, res) => {
+//   try {
+//     const partner = await Partner.findOne({ user: req.user.id });
+//     let food = await Food.findById(req.params.id);
+
+//     if (!food) {
+//       return res.status(404).json({ success: false, message: 'Food item not found' });
+//     }
+
+//     // Check ownership (partner) or admin
+//     if (req.user.role !== 'admin' && food.partner.toString() !== partner._id.toString()) {
+//       return res.status(403).json({ success: false, message: 'Not authorized' });
+//     }
+
+//     foodData.images = req.files.map(file => ({
+//       url: file.path,          // Cloudinary secure URL
+//       public_id: file.filename // Cloudinary public_id
+//     }));
+
+//     food = await Food.findByIdAndUpdate(req.params.id, req.body, {
+//       new: true,
+//       runValidators: true
+//     }).populate('category', 'name slug');
+
+//     res.json({ success: true, data: food });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+
 exports.createFood = async (req, res) => {
   try {
     const partner = await Partner.findOne({ user: req.user.id });
@@ -321,11 +397,15 @@ exports.createFood = async (req, res) => {
 
     const foodData = { ...req.body, partner: partner._id };
 
-    // Handle uploaded images — always use /uploads/filename (never file.path which is an absolute OS path)
-    foodData.images = req.files.map(file => ({
-      url: file.path,          // Cloudinary secure URL
-      public_id: file.filename // Cloudinary public_id
-    }));
+    if (req.files && req.files.length > 0) {
+      const uploaded = await Promise.all(
+        req.files.map(file => uploadToCloudinary(file.buffer, 'foodify/food'))
+      );
+      foodData.images = uploaded.map(result => ({
+        url: result.secure_url,
+        public_id: result.public_id
+      }));
+    }
 
     const food = await Food.create(foodData);
     await food.populate('category', 'name slug');
@@ -336,8 +416,6 @@ exports.createFood = async (req, res) => {
   }
 };
 
-// @desc    Update food item
-// @route   PUT /api/food/:id
 exports.updateFood = async (req, res) => {
   try {
     const partner = await Partner.findOne({ user: req.user.id });
@@ -347,17 +425,23 @@ exports.updateFood = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Food item not found' });
     }
 
-    // Check ownership (partner) or admin
     if (req.user.role !== 'admin' && food.partner.toString() !== partner._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
-    foodData.images = req.files.map(file => ({
-      url: file.path,          // Cloudinary secure URL
-      public_id: file.filename // Cloudinary public_id
-    }));
+    const updateData = { ...req.body };
 
-    food = await Food.findByIdAndUpdate(req.params.id, req.body, {
+    if (req.files && req.files.length > 0) {
+      const uploaded = await Promise.all(
+        req.files.map(file => uploadToCloudinary(file.buffer, 'foodify/food'))
+      );
+      updateData.images = uploaded.map(result => ({
+        url: result.secure_url,
+        public_id: result.public_id
+      }));
+    }
+
+    food = await Food.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true
     }).populate('category', 'name slug');
