@@ -44,7 +44,7 @@
 
 //     const skip = (Number(page) - 1) * Number(limit);
 //     const total = await Food.countDocuments(query);
-    
+
 //     const foods = await Food.find(query)
 //       .populate('category', 'name slug icon')
 //       .populate('partner', 'shopName slug logo rating deliveryTime deliveryFee')
@@ -99,7 +99,7 @@
 //     }
 
 //     const foodData = { ...req.body, partner: partner._id };
-    
+
 //     // Handle uploaded images
 //     if (req.files && req.files.length > 0) {
 //       foodData.images = req.files.map(file => ({
@@ -191,7 +191,7 @@
 //     }
 
 //     food.reviews.push({ user: req.user.id, rating, comment });
-    
+
 //     // Recalculate average
 //     const total = food.reviews.reduce((sum, r) => sum + r.rating, 0);
 //     food.rating.average = total / food.reviews.length;
@@ -265,7 +265,7 @@ exports.getAllFood = async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
     const total = await Food.countDocuments(query);
-    
+
     const foods = await Food.find(query)
       .populate('category', 'name slug icon')
       .populate('partner', 'shopName slug logo rating deliveryTime deliveryFee')
@@ -320,14 +320,12 @@ exports.createFood = async (req, res) => {
     }
 
     const foodData = { ...req.body, partner: partner._id };
-    
+
     // Handle uploaded images — always use /uploads/filename (never file.path which is an absolute OS path)
-    if (req.files && req.files.length > 0) {
-      foodData.images = req.files.map(file => ({
-        url: `/uploads/${file.filename}`,
-        public_id: file.filename
-      }));
-    }
+    foodData.images = req.files.map(file => ({
+      url: file.path,          // Cloudinary secure URL
+      public_id: file.filename // Cloudinary public_id
+    }));
 
     const food = await Food.create(foodData);
     await food.populate('category', 'name slug');
@@ -354,12 +352,10 @@ exports.updateFood = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
-    if (req.files && req.files.length > 0) {
-      req.body.images = req.files.map(file => ({
-        url: `/uploads/${file.filename}`,
-        public_id: file.filename
-      }));
-    }
+    foodData.images = req.files.map(file => ({
+      url: file.path,          // Cloudinary secure URL
+      public_id: file.filename // Cloudinary public_id
+    }));
 
     food = await Food.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -412,7 +408,7 @@ exports.addReview = async (req, res) => {
     }
 
     food.reviews.push({ user: req.user.id, rating, comment });
-    
+
     // Recalculate average
     const total = food.reviews.reduce((sum, r) => sum + r.rating, 0);
     food.rating.average = total / food.reviews.length;
