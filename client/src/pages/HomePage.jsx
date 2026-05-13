@@ -299,21 +299,10 @@ export default function HomePage() {
                     className="card-hover block overflow-hidden group"
                   >
                     <div className="relative h-36 overflow-hidden">
-                      {/* <img
-                        src={getImageUrl(partner.coverImage || partner.logo) || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80'}
-                        alt={partner.shopName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80'; }}
-                      /> */}
-
                       <img
-                        src={getImageUrl(partner.coverImage || partner.logo)}
+                        src={getImageUrl(partner.coverImage || partner.logo)} 
                         alt={partner.shopName}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          e.target.src =
-                            "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80";
-                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                       <div

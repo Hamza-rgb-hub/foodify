@@ -117,14 +117,9 @@ export default function PartnerFoods() {
               >
                 <div className="relative h-36">
                   <img
-                    src={getImageUrl(food.images?.[0]?.public_id)}
+                    src={getImageUrl(food.images?.[0]?.url)} 
                     alt={food.name}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&q=80";
-                    }}
                   />
                   {!food.isAvailable && (
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center">

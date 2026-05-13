@@ -37,18 +37,12 @@ export default function FoodCard({ food, index = 0 }) {
       <Link to={`/food/${food._id}`}>
         {/* Image */}
         <div className="relative overflow-hidden aspect-[4/3]">
-          {/* <img
-            src={getImageUrl(food.images?.[0]?.public_id)}
-            alt={food.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80'; }}
-          /> */}
           <img 
             src={getImageUrl(food.images?.[0]?.url)} 
             alt={food.name} 
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
           />
-          
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Badges */}
