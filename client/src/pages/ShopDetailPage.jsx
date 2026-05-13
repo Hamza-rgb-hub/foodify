@@ -68,10 +68,9 @@ export default function ShopDetailPage() {
       <div className="card overflow-hidden mb-8">
         <div className="relative h-56 sm:h-72">
           <img
-            src={getImageUrl(partner.coverImage || partner.logo) || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80'}
+            src={getImageUrl(partner.coverImage || partner.logo)}
             alt={partner.shopName}
             className="w-full h-full object-cover"
-            onError={e => { e.target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80'; }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6">

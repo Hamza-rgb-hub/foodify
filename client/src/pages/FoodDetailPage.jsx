@@ -66,7 +66,7 @@ export default function FoodDetailPage() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
             className="relative aspect-square rounded-3xl overflow-hidden mb-3">
             <img
-              src={getImageUrl(food.images?.[activeImg]?.public_id)}
+              src={getImageUrl(food.images?.[activeImg]?.url)}
               alt={food.name}
               className="w-full h-full object-cover"
               onError={e => { e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'; }}

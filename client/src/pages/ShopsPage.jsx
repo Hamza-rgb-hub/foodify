@@ -61,10 +61,9 @@ export default function ShopsPage() {
               <Link to={`/shops/${partner._id}`} className="card-hover block overflow-hidden group">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getImageUrl(partner.coverImage || partner.logo) || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80'}
+                    src={getImageUrl(partner.coverImage || partner.logo)}
                     alt={partner.shopName}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={e => { e.target.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className={`absolute top-3 right-3 badge text-white text-xs ${partner.isOpen ? 'bg-emerald-500' : 'bg-red-500'}`}>
